@@ -1,4 +1,5 @@
 require 'socket'
+require 'tpay_encryptor'
 
 class HomeController < ApplicationController
   def checkout
@@ -25,17 +26,23 @@ class HomeController < ApplicationController
 
 	#$ediDate, $mid, $merchantKey, $amt    
 	#$encryptor = new Encryptor($merchantKey);
-	
-
 	# $encryptData = $encryptor->encData($amt.$mid.$moid);
 	# $ediDate = $encryptor->getEdiDate();	
 	# $vbankExpDate = $encryptor->getVBankExpDate();	
-	@encryptData = "sampleencryptdata"
-	@ediDate = "$encryptor->getEdiDate()"
-	@vbankExpDate = "$encryptor->getVBankExpDate()"
+
+	@encryptor = TpayEncryptor.new( @merchantKey, nil )
+	# puts "====================="
+	# puts @encryptor.key
+	# puts "====================="
+	# puts @encryptor.iv
+
+	@encryptData = @encryptor.encData(@amt + @mid + @moid)
+	@ediDate = @encryptor.ediDate
+	@vbankExpDate = @encryptor.getVBankExpDate
 
 	@payActionUrl = "http://webtx.tpay.co.kr";
-	@payLocalUrl = "http://kimbob79.godohosting.com";
+	#@payLocalUrl = "http://kimbob79.godohosting.com";
+	@payLocalUrl = "http://127.0.0.1:3000";
 
 	
 	ip=Socket.ip_address_list.detect{|intf| intf.ipv4_private?}
@@ -43,4 +50,8 @@ class HomeController < ApplicationController
 
 	render :layout => false
   end
+
+  def results
+  end
+
 end

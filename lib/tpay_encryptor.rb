@@ -1,4 +1,5 @@
 require 'digest'
+require 'openssl'
 
 class TpayEncryptor
 	@encKey = nil
@@ -7,19 +8,28 @@ class TpayEncryptor
 	@key = nil
 	@iv = nil
 
-	def initialize(params = {})
+	def initialize(key, ediDate)
+	#def initialize(key)
 
-		@merchantKey = params[:key]
-		if params[:ediDate].present?
-			@ediDate = ediDate	
+		# @merchantKey = params[:key]
+		# if params[:ediDate].present?
+		# 	@ediDate = ediDate	
+		# else
+		# 	@ediDate = Time.now.strftime("%Y%m%d%H%M%S")
+		# end
+		if ediDate 
+			@ediDate = ediDate
 		else
 			@ediDate = Time.now.strftime("%Y%m%d%H%M%S")
 		end
 		
-		@encKey = Digest::MD5.hexdigest(@ediDate + $merchantKey)
+		@merchantKey = key
+		
+		
+		@encKey = Digest::MD5.hexdigest(@ediDate + @merchantKey)
 
-		@key = this.hex2bin(@encKey)
-		@iv = this.hex2bin(this.strToHex(@merchantKey[0..16])
+		@key = hex2bin(@encKey)
+		@iv = hex2bin(strToHex(@merchantKey[0..15]))
 
 	end
 
@@ -46,7 +56,7 @@ class TpayEncryptor
 
 
 	def encData(input)
-		this.encrypt(@key, @iv, input)
+		encrypt(@key, @iv, input)
 	end
 
 	def encrypt(key, iv, value)
@@ -54,6 +64,17 @@ class TpayEncryptor
 		# if ( is_null ($value) ){
 		# 			$value = "" ;
 		# 	}
+		return "" if value.blank?
+
+		cipher = OpenSSL::Cipher::Cipher.new('aes-128-cbc')
+		cipher.encrypt
+		# cipher.key = Base64.decode64(key)
+		# cipher.iv = Base64.decode64(iv)
+		cipher.key = key
+		cipher.iv = iv
+		encrypted_data = cipher.update(value)
+		encrypted_data << cipher.final
+		crypt64 = [encrypted_data].pack("m").strip
 
 		# $value = $this->toPkcs7 ($value) ;
 
@@ -64,8 +85,13 @@ class TpayEncryptor
 
 
 	def hex2bin(hexdata)
-		bindata = ""
-
+		
+		if hexdata and hexdata.size >= 2
+			#hexdata.gsub(/../) { |pair| pair.hex.chr }
+			[hexdata].pack('H*')
+		else
+			""
+		end
 		# $bindata="";
 		# 	for ($i=0;$i<strlen($hexdata);$i+=2) {
 		# 			$bindata.=chr(hexdec(substr($hexdata,$i,2)));
@@ -74,13 +100,23 @@ class TpayEncryptor
 	end
 
 	def strToHex(input_string)
-		output_hex = ""
+		
+		if input_string
+			#input_string.to_i.to_s(16)
+			input_string.unpack('H*')[0]
+		else
+			""
+		end
 		# php
 		# $hex='';
 		# for ($i=0; $i < strlen($string); $i++){
 		# 	$hex .= dechex(ord($string[$i]));
 		# }
 		# return $hex;
+	end
+
+	def getVBankExpDate
+		(Time.now + 1.day).strftime("%Y%m%d")
 	end
 
 

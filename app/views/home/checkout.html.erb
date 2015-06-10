@@ -17,6 +17,27 @@ var resultUrl = "./result";	//결제결과 받는 URL
 <title>tPay 인터넷결제</title>
 </head>
 <body>
+
+	<%= Time.now.strftime('%Y%m%d%H%M%S') %>
+	<br/>
+	<%= @amt + @mid + @moid %>
+	<h3>encryptData</h3>
+	<%= @encryptData %>
+	<h3>ediDate</h3>
+	<%= @ediDate%>
+	<h3>ediDate.merchantKey</h3>
+	<%= @ediDate + @merchantKey %>
+	<h3>encKey</h3>
+	<%= @encryptor.encKey %>
+	<h3>key</h3>
+	<!-- %= @encryptor.key %> -->
+	<h3>iv</h3>
+	<%= @encryptor.iv %>
+	<h3>$vbankExpDate</h3>
+	<%= @vbankExpDate %>
+	<h3>strToHex</h3>
+	<%= @encryptor.strToHex(@merchantKey[0..15]) %>
+
 <form id="transMgr" name="transMgr" method="post" action="<%=@payActionUrl %>/webTxInit" class="nyroModal" target="_blank">
 		<table cellspacing="1" border="0" cellpadding="0">
 		<thead>
@@ -97,7 +118,7 @@ var resultUrl = "./result";	//결제결과 받는 URL
 	
 	<input type="hidden" name="payType" value="1">	
 	<input type="hidden" name="ediDate"	value='<%=@ediDate%>'>
-	<input type="hidden" name="encryptData" value="<%=$encryptData%>">
+	<input type="hidden" name="encryptData" value="<%=@encryptData%>">
 	<input type="hidden" name="userIp"	value="<%=request.remote_ip%>">
 	<input type="hidden" name="browserType" id="browserType">
 	<input type="hidden" name="returnUrl" value="<%=@payLocalUrl + "/sample/iframeResponse.jsp" %>">
@@ -107,12 +128,12 @@ var resultUrl = "./result";	//결제결과 받는 URL
 	<input type="hidden" name="buyerPostNo" value="463400">
 	<input type="hidden" name="mallIp" value="<%=@shop_ip%>">
 	<input type="hidden" name="mallReserved" value="MallReserved">
-	<input type="hidden" name="vbankExpDate" value="<%=$vbankExpDate%>">
+	<input type="hidden" name="vbankExpDate" value="<%=@vbankExpDate%>">
 	<input type="hidden" name="rcvrMsg" value="rcvrMsg">
 	<input type="hidden" name="prdtExpDate" value="20151231">
 	<input type="hidden" name="resultYn" value="Y">
 	<input type="hidden" name="quotaFixed" value="">
-	<input type="hidden" name="domain" value="<%=$payLocalUrl%>">
+	<input type="hidden" name="domain" value="<%=@payLocalUrl%>">
 	
 	<!--
 	Tx 모듈(socket)
