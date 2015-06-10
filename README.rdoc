@@ -3,5 +3,5 @@
 This is sample for tPay payment integeration in Ruby environment.
 You can check detail guide in wiki
 
-* [tPay developer page]:http://jtnet.github.io/
-* [Wiki](https://github.com/JTNet/tpay_ruby_sdk/wiki)
+* tPay - developer page http://jtnet.github.io/
+* Wiki - https://github.com/JTNet/tpay_ruby_sdk/wiki
