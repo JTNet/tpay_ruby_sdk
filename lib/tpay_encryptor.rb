@@ -22,6 +22,8 @@ class TpayEncryptor
 		else
 			@ediDate = Time.now.strftime("%Y%m%d%H%M%S")
 		end
+
+		
 		
 		@merchantKey = key
 		
@@ -80,6 +82,26 @@ class TpayEncryptor
 
 		# $output = mcrypt_encrypt (MCRYPT_RIJNDAEL_128, $key, $value, MCRYPT_MODE_CBC, $iv) ;
 		# return base64_encode ($output) ;
+	end
+
+	def decData(input)
+		decrypt(@key, @iv, input)
+	end
+
+	def decrypt(key, iv, value)
+		cipher = OpenSSL::Cipher::Cipher.new('aes-128-cbc')
+		cipher.decrypt
+		cipher.key = key
+		cipher.iv = iv
+		decrypted_data = cipher.update(Base64.decode64(value))
+		decrypted_data << cipher.final
+
+		# puts "============="
+		# puts decrypted_data
+		# puts "============="
+
+		return decrypted_data
+
 	end
 
 

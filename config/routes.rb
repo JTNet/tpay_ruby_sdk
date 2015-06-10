@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
-  get 'home/checkout'
-  post 'home/result'
+  get 'tpay/checkout'
+  get 'tpay/cancel'
+  post 'tpay/result'
+  post 'tpay/cancel_result'
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

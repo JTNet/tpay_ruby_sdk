@@ -1,0 +1,59 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+
+
+
+<link rel="stylesheet" href="/css/sample.css" type="text/css" media="screen" />
+<title>tPay 인터넷결제</title>
+</head>
+<body>
+
+<%if @is_success_integrity_check %>
+<table>
+	<th>구분</th>
+	<th>데이터</th>
+	<tr>
+		<td>결과코드</td> 
+		<td><%= @result_code%></td>
+	</tr>
+	<tr>
+		<td>결과메세지</td> 
+		<td><%= @results_msg%></td>
+	</tr>
+	<tr>
+		<td>구매자</td> 
+		<td><%= @buyer_name%></td>
+	</tr>
+	<tr>
+		<td>구매자전화</td> 
+		<td><%= @buyer_tel%></td>
+	</tr>
+	<tr>
+		<td>구매자메일</td> 
+		<td><%= @buyer_email%></td>
+	</tr>
+	<tr>
+		<td>품목</td> 
+		<td><%= @product_name%></td>
+	</tr>
+	<tr>
+		<td>결제수단</td> 
+		<td><%= @fn_name%></td>
+	</tr>
+	<tr>
+		<td>승인날짜</td> 
+		<td><%= @authDate%></td>
+	</tr>
+
+	</tr>
+</table>
+	
+<%else%>
+<h1> 결제 데이터가 중간에 위변조 되어 결제가 취소되었습니다. </h1>
+<%end%>
+
+</body>
+
+</html>
