@@ -1,5 +1,7 @@
 require 'socket'
 require 'tpay_encryptor'
+require "net/http"
+require "uri"
 
 class TpayController < ApplicationController
   def checkout
@@ -41,7 +43,6 @@ class TpayController < ApplicationController
 	@vbankExpDate = @encryptor.getVBankExpDate
 
 	@payActionUrl = "http://webtx.tpay.co.kr"
-	#@payLocalUrl = "http://kimbob79.godohosting.com";
 	@payLocalUrl = "http://127.0.0.1:3000"
 
 	
@@ -91,8 +92,31 @@ class TpayController < ApplicationController
 	@decrypted_moid = decryptor.decData(encrypted_moid)
 
 	if @decrypted_amt == amt_from_db and @decrypted_moid == moid_from_db
-		#Send success results
+
 		@is_success_integrity_check = true
+		uri = URI.parse("https://webtx.tpay.co.kr/resultConfirm")
+		body = { tid:tid, result:"000" }
+		response = Net::HTTP.post_form(uri, body)
+
+
+# 		uri = URI.parse("https://webtx.tpay.co.kr/resultConfirm")
+# body = { tid:"tpaytest0m01011506101553209040", result:"000" }
+# http = Net::HTTP.new(uri.host, uri.port)
+# http.use_ssl = true
+# http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+# req = Net::HTTP::Post.new(uri.path)
+# req["tid"] = "tpaytest0m01011506101553209040"
+# req["result"] = "000"
+# res = http.request(req)
+# #http.post(uri.path, body)
+
+
+# uri = URI.parse("https://webtx.tpay.co.kr/resultConfirm")
+# req = Net::HTTP::Post.new(uri)
+# req.set_form_data('tid' => 'tpaytest0m01011506101553209040', 'result' => '000')
+# res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) do |http|
+#   http.request(req)
+end
 
 	else
 		@is_success_integrity_check = false
@@ -148,6 +172,45 @@ class TpayController < ApplicationController
   end
 
   def cancel_result
+  	@mid = "tpaytest0m"	##상점id
+	merchantKey = "VXFVMIZGqUJx29I/k52vMM8XG4hizkNfiapAkHHFxq0RwFzPit55D3J3sAeFSrLuOnLNVCIsXXkcBfYK1wv8kQ==" #상점키
+
+	amt_from_db = "1004"
+  	moid_from_db = "toid1234567890"
+
+  	encrypted_moid = params[:moid]
+  	encrypted_amt = params[:cancelAmt]
+
+  	@pay_method = params[:payMethod]
+  	ediDate = params[:ediDate]
+  	@cancel_date = params[:cancelDate]
+  	@result_msg = params[:resultMsg]
+  	@result_code = params[:resultCd]
+
+
+  	decryptor = TpayEncryptor.new(merchantKey, ediDate )
+  	@decrypted_amt = decryptor.decData(encrypted_amt)
+	@decrypted_moid = decryptor.decData(encrypted_moid)
+
+	if @decrypted_amt == amt_from_db and @decrypted_moid == moid_from_db
+
+		@is_success_integrity_check = true
+	else
+		@is_success_integrity_check = false
+	end
+
+	# Retunrn Parameter
+	# $payMethod = $_POST['payMethod'];
+	# $ediDate = $_POST['ediDate'];
+	# $returnUrl = $_POST['returnUrl'];
+	# $resultMsg = $_POST['resultMsg'];
+	# $cancelDate = $_POST['cancelDate'];
+	# $cancelTime = $_POST['cancelTime'];
+	# $resultCd = $_POST['resultCd'];
+	# $cancelNum = $_POST['cancelNum'];
+	# $cancelAmt = $_POST['cancelAmt'];
+	# $moid = $_POST['moid'];
+
   	render :layout => false
   end
 

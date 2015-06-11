@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
-<link rel="stylesheet" href="css/sample.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/css/sample.css" type="text/css" media="screen" />
 <title>tPay 인터넷결제</title>
 <script language="javascript">
 <!--
@@ -90,7 +90,7 @@ function goCancelCard() {
 			</tbody>
 		</table>
 	</div>	
-<input type="hidden" name="returnUrl" value="./cancel_result" />
+<input type="hidden" name="returnUrl" value="<%= @payLocalUrl%>/tpay/cancel_result" />
 </form>
 
 </body>
