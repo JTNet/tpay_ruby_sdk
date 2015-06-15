@@ -7,7 +7,8 @@ class TpayController < ApplicationController
 
 	@mid = Rails.configuration.x.tpay.mid
 	@payActionUrl = Rails.configuration.x.tpay.pay_url
-	@payLocalUrl = Rails.configuration.x.tpay.local_url
+	#@payLocalUrl = Rails.configuration.x.tpay.local_url
+	@payLocalUrl = "http://127.0.0.1:3000"
 	encryptor = TpayEncryptor.new(Rails.application.secrets.merchant_key, nil )	
 
 	# 주문별로 다름
