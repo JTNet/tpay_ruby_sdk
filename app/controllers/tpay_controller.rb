@@ -125,6 +125,10 @@ class TpayController < ApplicationController
 	amt_from_db = "1004"
   	moid_from_db = "toid1234567890"
 
+  	if params[:moid].blank? or params[:cancelAmt].blank?
+  		return render json: params[:resultMsg]
+  	end
+  	
   	encrypted_moid = params[:moid]
   	encrypted_amt = params[:cancelAmt]
 
@@ -134,6 +138,7 @@ class TpayController < ApplicationController
   	@result_msg = params[:resultMsg]
   	@result_code = params[:resultCd]
 
+  	
 
   	decryptor = TpayEncryptor.new(Rails.application.secrets.merchant_key, ediDate )
   	@decrypted_amt = decryptor.decData(encrypted_amt)
