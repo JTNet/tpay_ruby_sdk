@@ -4,19 +4,28 @@ require "net/http"
 
 class TpayController < ApplicationController
   def checkout
-
-	@mid = Rails.configuration.x.tpay.mid
+  	@mid = Rails.configuration.x.tpay.mid
 	@payActionUrl = Rails.configuration.x.tpay.pay_url
-	#@payLocalUrl = Rails.configuration.x.tpay.local_url
-	@payLocalUrl = "http://127.0.0.1:3000"
-	encryptor = TpayEncryptor.new(Rails.application.secrets.merchant_key, nil )	
+	@payLocalUrl = Rails.configuration.x.tpay.local_url
 
-	# 주문별로 다름
-	@amt = "1004"	 ##결제금액
-	@moid = "toid1234567890" ##상점이 주문 구분을 위해 사용하는 주문ID
-	@encryptData = encryptor.encData(@amt + @mid + @moid)
-	@ediDate = encryptor.ediDate
-	@vbankExpDate = encryptor.getVBankExpDate
+  	case request.method_symbol
+  	when :get
+		
+		encryptor = TpayEncryptor.new(Rails.application.secrets.merchant_key, nil )	
+		# 주문별로 다름
+		@amt = "1004"	 ##결제금액
+		@moid = "toid1234567890" ##상점이 주문 구분을 위해 사용하는 주문ID
+		@encryptData = encryptor.encData(@amt + @mid + @moid)
+		@ediDate = encryptor.ediDate
+		@vbankExpDate = encryptor.getVBankExpDate
+	when :post
+		@amt = params[:amt]
+		@moid = params[:moid]
+		encryptor = TpayEncryptor.new(Rails.application.secrets.merchant_key, nil )	
+		@encryptData = encryptor.encData(@amt + @mid + @moid)
+		@ediDate = encryptor.ediDate
+		@vbankExpDate = encryptor.getVBankExpDate
+	end
 
 	ip=Socket.ip_address_list.detect{|intf| intf.ipv4_private?}
 	@shop_ip = ip.ip_address if ip

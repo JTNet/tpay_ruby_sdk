@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'tpay/checkout'
+  post 'tpay/checkout'
   get 'tpay/cancel'
   post 'tpay/result'
   post 'tpay/cancel_result'
