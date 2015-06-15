@@ -20,7 +20,6 @@ class TpayController < ApplicationController
 		@vbankExpDate = encryptor.getVBankExpDate
 	when :post
 		@amt = params[:amt]
-		@moid = params[:moid]
 		encryptor = TpayEncryptor.new(Rails.application.secrets.merchant_key, nil )	
 		@encryptData = encryptor.encData(@amt + @mid + @moid)
 		@ediDate = encryptor.ediDate
@@ -128,7 +127,7 @@ class TpayController < ApplicationController
   	if params[:moid].blank? or params[:cancelAmt].blank?
   		return render json: params[:resultMsg]
   	end
-  	
+
   	encrypted_moid = params[:moid]
   	encrypted_amt = params[:cancelAmt]
 

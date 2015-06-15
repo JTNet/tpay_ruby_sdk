@@ -104,7 +104,7 @@ function submitParametersToNextPage(param, url){
 
 function changeAmt(){
 	frm = document.transMgr;
-	frm.action = 'checkout';
+	frm.action = '';
 	frm.target = "_self";
 	$('#transMgr').removeClass("nyroModal");
 	frm.submit();
