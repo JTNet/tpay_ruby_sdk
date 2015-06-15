@@ -9,7 +9,7 @@
 <script type="text/javascript" src="/js/jquery.nyroModal.tpay.custom.js"></script>
 <script type="text/javascript" src="/js/client.tpay.webtx.js" defer="defer" async="async"></script>
 <script>
-var resultUrl = "./result";	//결제결과 받는 URL
+var resultUrl = "<%= tpay_result_path %>";	//결제결과 받는 URL
 </script>
 <!-- -->
 
@@ -17,27 +17,6 @@ var resultUrl = "./result";	//결제결과 받는 URL
 <title>tPay 인터넷결제</title>
 </head>
 <body>
-
-	<%= Time.now.strftime('%Y%m%d%H%M%S') %>
-	<br/>
-	<%= @amt + @mid + @moid %>
-	<h3>encryptData</h3>
-	<%= @encryptData %>
-	<h3>ediDate</h3>
-	<%= @ediDate%>
-	<h3>ediDate.merchantKey</h3>
-	<%= @ediDate + @merchantKey %>
-	<h3>encKey</h3>
-	<%= @encryptor.encKey %>
-	<h3>key</h3>
-	<!-- %= @encryptor.key %> -->
-	<h3>iv</h3>
-	<%= @encryptor.iv %>
-	<h3>$vbankExpDate</h3>
-	<%= @vbankExpDate %>
-	<h3>strToHex</h3>
-	<%= @encryptor.strToHex(@merchantKey[0..15]) %>
-
 <form id="transMgr" name="transMgr" method="post" action="<%=@payActionUrl %>/webTxInit" class="nyroModal" target="_blank">
 		<table cellspacing="1" border="0" cellpadding="0">
 		<thead>
@@ -121,7 +100,6 @@ var resultUrl = "./result";	//결제결과 받는 URL
 	<input type="hidden" name="encryptData" value="<%=@encryptData%>">
 	<input type="hidden" name="userIp"	value="<%=request.remote_ip%>">
 	<input type="hidden" name="browserType" id="browserType">
-	<input type="hidden" name="returnUrl" value="<%=@payLocalUrl + "/sample/iframeResponse.jsp" %>">
 	<input type="hidden" name="mallUserId" value="tpay_id">
 	<input type="hidden" name="parentEmail">
 	<input type="hidden" name="buyerAddr" value="서울특별시 구로구 디지털로 30길28, 마리오타워 9F">
@@ -134,12 +112,6 @@ var resultUrl = "./result";	//결제결과 받는 URL
 	<input type="hidden" name="resultYn" value="Y">
 	<input type="hidden" name="quotaFixed" value="">
 	<input type="hidden" name="domain" value="<%=@payLocalUrl%>">
-	
-	<!--
-	Tx 모듈(socket)
-	<input type="hidden" name="socketYn" value="Y">
-	<input type="hidden" name="socketReturnURL" value="<?=$payLocalUrl?>/sample/tx_trans.php">
-	-->
 	<input type="hidden" name="socketYn" value="N">
 	<input type="hidden" name="socketReturnURL" value="">
 

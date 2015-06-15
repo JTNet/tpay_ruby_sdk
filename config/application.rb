@@ -23,5 +23,12 @@ module Tpay
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
     config.autoload_paths += %W(#{config.root}/lib)
+
+
+
+    # custome configuration for tpay
+    config.x.tpay.mid = "tpaytest0m"
+    config.x.tpay.local_url = "http://127.0.0.1:3000"
+    config.x.tpay.pay_url = "http://webtx.tpay.co.kr"
   end
 end
