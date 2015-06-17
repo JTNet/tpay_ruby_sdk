@@ -8,13 +8,13 @@ class TpayController < ApplicationController
 	@payActionUrl = Rails.configuration.x.tpay.pay_url
 	@payLocalUrl = Rails.configuration.x.tpay.local_url
 
+	@moid = "toid1234567890" ##상점이 주문 구분을 위해 사용하는 주문ID
   	case request.method_symbol
   	when :get
 		
 		encryptor = TpayEncryptor.new(Rails.application.secrets.merchant_key, nil )	
-		# 주문별로 다름
-		@amt = "1004"	 ##결제금액
-		@moid = "toid1234567890" ##상점이 주문 구분을 위해 사용하는 주문ID
+	
+		@amt = "1004"	 ##결제금액	
 		@encryptData = encryptor.encData(@amt + @mid + @moid)
 		@ediDate = encryptor.ediDate
 		@vbankExpDate = encryptor.getVBankExpDate
